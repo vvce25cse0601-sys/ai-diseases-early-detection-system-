@@ -3,6 +3,7 @@ import random
 from datetime import datetime
 import pandas as pd
 import streamlit.components.v1 as components
+import os
 
 st.set_page_config(
     page_title="Smart Paddy AI",
@@ -159,4 +160,9 @@ elif page == "Monitoring":
     with open("templates/monitoring.html", "r", encoding='utf-8') as f:
         monitor_html = f.read()
     components.html(monitor_html, height=1000)
-    
+# Get the directory where app.py is located
+current_dir = os.path.dirname(__file__)
+file_path = os.path.join(current_dir, "templates", "base.html")
+
+with open(file_path, "r", encoding='utf-8') as f:
+    html_content = f.read()
