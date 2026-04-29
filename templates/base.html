@@ -38,25 +38,34 @@
         </div>
     </div>
     <style>
-    /* Force the background to be solid so Streamlit doesn't bleed through */
-    body { 
-        background-color: #f4f9f4 !important; 
-        color: #1a3c1a !important; /* Dark green text for visibility */
-        margin: 0;
-        padding: 20px;
+    /* 1. Force the background to be white/light grey */
+    html, body {
+        background-color: #f4f9f4 !important;
+        color: #000000 !important; /* Forces black text if green fails */
     }
 
-    /* Make sure all titles and paragraphs are visible */
-    h1, h2, h3, p, span {
-        color: #1a3c1a !important; 
+    /* 2. Target the specific Dashboard box to make it "Pop" */
+    .container, .card, .main-box {
+        background-color: #ffffff !important;
+        border: 3px solid #2ecc71 !important;
+        color: #1b4d1b !important; /* Dark green text */
+        display: block !important;
+        visibility: visible !important;
     }
 
-    .container {
-        background: white !important;
-        border: 2px solid #2ecc71 !important;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    /* 3. Ensure all text inside the dashboard is dark */
+    h1, h2, h3, p, div, span {
+        color: #1b4d1b !important;
+        opacity: 1 !important;
+    }
+
+    /* 4. Fix the button visibility */
+    .btn, button {
+        background-color: #2ecc71 !important;
+        color: white !important;
+        font-weight: bold !important;
+        padding: 15px 30px !important;
+        display: inline-block !important;
     }
 </style>
 </body>
