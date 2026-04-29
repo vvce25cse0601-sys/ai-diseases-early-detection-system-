@@ -154,7 +154,7 @@ elif page == "Home":
         html_content = f.read()
     
     # This 'injects' the HTML into your Streamlit app
-    components.html(html_content, height=1000, scrolling=True)
+    components.html(html_content, height=500)
 
 elif page == "Monitoring":
     with open("templates/monitoring.html", "r", encoding='utf-8') as f:
@@ -170,3 +170,14 @@ with open(base_path, "r", encoding='utf-8') as f:
 
 # Display it
 components.html(html_content, height=1200, scrolling=True)
+if page == "Home":
+    # 1. First, show the Dashboard (The Face)
+    with open("templates/base.html", "r", encoding='utf-8') as f:
+        html_content = f.read()
+    components.html(html_content, height=500) # Reduced height so table fits below
+
+    # 2. Then, show the alerts and table below it
+    st.info("All clear.")
+   
+    # Your table data code goes here
+    # st.table(df) or st.dataframe(df)
