@@ -162,14 +162,6 @@ elif page == "Monitoring":
     components.html(monitor_html, height=1000)
 # Get the folder where app.py lives
 current_dir = os.path.dirname(__file__)
-base_path = os.path.join(current_dir, "templates", "base.html")
-
-# Read the file using the full path
-with open(base_path, "r", encoding='utf-8') as f:
-    html_content = f.read()
-
-# Display it
-components.html(html_content, height=1200, scrolling=True)
 if page == "Home":
     # 1. First, show the Dashboard (The Face)
     with open("templates/base.html", "r", encoding='utf-8') as f:
