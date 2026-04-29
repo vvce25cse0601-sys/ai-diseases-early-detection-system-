@@ -147,10 +147,7 @@ elif page == "History":
     history_page()
 elif page == "Settings":
     settings_page()
-
-# ... after your sidebar logic ...
-
-if page == "Home":
+elif page == "Home":
     # This reads the file from your 'templates' folder
     with open("templates/base.html", "r", encoding='utf-8') as f:
         html_content = f.read()
@@ -162,9 +159,4 @@ elif page == "Monitoring":
     with open("templates/monitoring.html", "r", encoding='utf-8') as f:
         monitor_html = f.read()
     components.html(monitor_html, height=1000)
-    if page == "Home":
-    # Change "index.html" to "base.html" here
-    with open("templates/base.html", "r", encoding='utf-8') as f:
-        html_content = f.read()
     
-    components.html(html_content, height=1000, scrolling=True)
