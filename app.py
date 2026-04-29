@@ -160,9 +160,13 @@ elif page == "Monitoring":
     with open("templates/monitoring.html", "r", encoding='utf-8') as f:
         monitor_html = f.read()
     components.html(monitor_html, height=1000)
-# Get the directory where app.py is located
+# Get the folder where app.py lives
 current_dir = os.path.dirname(__file__)
-file_path = os.path.join(current_dir, "templates", "base.html")
+base_path = os.path.join(current_dir, "templates", "base.html")
 
-with open(file_path, "r", encoding='utf-8') as f:
+# Read the file using the full path
+with open(base_path, "r", encoding='utf-8') as f:
     html_content = f.read()
+
+# Display it
+components.html(html_content, height=1200, scrolling=True)
