@@ -15,7 +15,37 @@
     </div>
 
     <div class="container">
-        {% block content %}{% endblock %}
+        <div class="main-content">
+    <div class="result-card">
+        <h2>Scan Results</h2>
+        <div id="ai-prediction" class="prediction-box">
+            <p>Waiting for Image Upload...</p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>Captured Image</h3>
+            <div class="image-placeholder">
+                <p>Image Preview Area</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Diagnostic Details</h3>
+            <ul>
+                <li><strong>Confidence Score:</strong> --%</li>
+                <li><strong>Detected Pathogen:</strong> None</li>
+                <li><strong>Infection Level:</strong> Low/Medium/High</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="action-card">
+        <h3>Recommended Treatment</h3>
+        <p>Once a disease is identified, specific organic and chemical solutions will be listed here to save your crop.</p>
+    </div>
+</div>
     </div>
 
     <div class="bottom-nav">

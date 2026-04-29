@@ -2,6 +2,7 @@ import streamlit as st
 import random
 from datetime import datetime
 import pandas as pd
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Smart Paddy AI",
@@ -146,3 +147,24 @@ elif page == "History":
     history_page()
 elif page == "Settings":
     settings_page()
+
+# ... after your sidebar logic ...
+
+if page == "Home":
+    # This reads the file from your 'templates' folder
+    with open("templates/base.html", "r", encoding='utf-8') as f:
+        html_content = f.read()
+    
+    # This 'injects' the HTML into your Streamlit app
+    components.html(html_content, height=1000, scrolling=True)
+
+elif page == "Monitoring":
+    with open("templates/monitoring.html", "r", encoding='utf-8') as f:
+        monitor_html = f.read()
+    components.html(monitor_html, height=1000)
+    if page == "Home":
+    # Change "index.html" to "base.html" here
+    with open("templates/base.html", "r", encoding='utf-8') as f:
+        html_content = f.read()
+    
+    components.html(html_content, height=1000, scrolling=True)
