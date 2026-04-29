@@ -1,54 +1,40 @@
 import streamlit as st
 import random
-from datetime import datetime
 import pandas as pd
+<<<<<<< HEAD
 import streamlit.components.v1 as components
 import os
+=======
+from datetime import datetime
+>>>>>>> 2fe242d (Initial commit)
 
 st.set_page_config(
     page_title="Smart Paddy AI",
     page_icon="🌾",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for "farmer-friendly green theme"
+# Minimal custom CSS for things Streamlit doesn't natively support (like gradient headers and status badges)
 st.markdown("""
     <style>
-    :root {
-        --primary-green: #2ecc71;
-        --dark-green: #27ae60;
-    }
-    .stApp {
-        background-color: #f4f6f8;
-    }
-    h1, h2, h3 {
-        color: #2c3e50;
-    }
-    .stButton>button {
-        background-color: #2ecc71;
-        color: white;
-        border-radius: 10px;
-        border: none;
-        box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
-    }
-    .stButton>button:hover {
-        background-color: #27ae60;
-    }
-    .status-safe { color: #2ecc71; font-weight: bold; }
-    .status-warning { color: #f1c40f; font-weight: bold; }
-    .status-danger { color: #e74c3c; font-weight: bold; }
-    .card {
-        background-color: white;
+    .gradient-header {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
         padding: 20px;
         border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        color: white;
+        text-align: center;
         margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
     }
+    .badge-safe { background-color: #2ecc71; color: white; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;}
+    .badge-warning { background-color: #f1c40f; color: #333; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;}
+    .badge-danger { background-color: #e74c3c; color: white; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;}
+    .live-feed { border-radius: 10px; overflow: hidden; position: relative; border: 2px solid #2ecc71;}
     </style>
 """, unsafe_allow_html=True)
 
-# Mock Data
+# Mock Data (Backend State)
 if 'alerts' not in st.session_state:
     st.session_state.alerts = [
         {"id": 1, "type": "Stem Borer Worm", "severity": "High", "time": "10 Mins Ago", "status": "Infected"},
@@ -57,81 +43,96 @@ if 'alerts' not in st.session_state:
 
 # Navigation Sidebar
 st.sidebar.title("🌾 Smart Paddy AI")
-page = st.sidebar.radio("Navigation", ["Home", "Monitoring", "Alerts", "Suggestions", "Manual", "Helpline", "History", "Settings"])
+page = st.sidebar.radio("Navigation", ["Home", "Monitoring", "Alerts", "Suggestions", "Manual", "Helpline"])
+
+st.sidebar.divider()
+st.sidebar.info("System is Online 🟢")
 
 def home_page():
-    st.title("Welcome to Smart Paddy AI")
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    
+    st.markdown('<div class="gradient-header"><h1>🌾 Smart Paddy Dashboard</h1></div>', unsafe_allow_html=True)
+
     health_status = "Infected" if any(a['status'] == 'Infected' for a in st.session_state.alerts) else "Healthy"
-    status_class = "status-danger" if health_status == "Infected" else "status-safe"
-    
+    status_badge = "badge-danger" if health_status == "Infected" else "badge-safe"
+    latest_msg = random.choice(["No pests detected.", "Warning: Stem borer activity possible.", "All clear."])
+
+    # Top metrics using native columns
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("Current Field Status")
-        st.markdown(f'<h2 class="{status_class}">{health_status}</h2>', unsafe_allow_html=True)
-    
+        with st.container(border=True):
+            st.subheader("Field Status")
+            st.markdown(f'<span class="{status_badge}">STATUS: {health_status.upper()}</span>', unsafe_allow_html=True)
+            st.caption("Updated just now")
     with col2:
-        st.subheader("Latest Detection")
-        latest = random.choice(["No pests detected.", "Warning: Stem borer activity possible.", "All clear."])
-        st.info(latest)
-        
-    st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.subheader("Latest Detection")
+            st.write(latest_msg)
+            st.caption("AI Vision Sensor 1")
     
-    st.subheader("Recent Alerts")
-    if st.session_state.alerts:
-        df = pd.DataFrame(st.session_state.alerts)
-        st.dataframe(df, use_container_width=True)
+    st.write("### Recent Alerts")
+    if not st.session_state.alerts:
+        st.success("No active alerts! Your field is safe.")
     else:
-        st.success("No recent alerts.")
+        for alert in st.session_state.alerts:
+            with st.container(border=True):
+                col_a, col_b = st.columns([3, 1])
+                with col_a:
+                    st.write(f"**{alert['type']}**")
+                    st.caption(f"{alert['time']} • {alert['status']}")
+                with col_b:
+                    b_class = "badge-danger" if alert['severity'] == "High" else "badge-warning"
+                    st.markdown(f'<div style="text-align: right;"><span class="{b_class}">{alert["severity"]}</span></div>', unsafe_allow_html=True)
 
 def monitoring_page():
-    st.title("📷 Live Field Monitoring")
-    st.markdown("### Camera 1 - Main Paddy Field")
-    # Placeholder for live camera feed
-    st.image("https://images.unsplash.com/photo-1590682680695-43b964a3ae17?q=80&w=1000&auto=format&fit=crop", 
-             caption="Live Feed", use_container_width=True)
-    st.button("Capture Snapshot")
+    st.markdown('<div class="gradient-header"><h2>📷 Live Field Monitoring</h2></div>', unsafe_allow_html=True)
+    
+    with st.container(border=True):
+        st.write("### Camera 1 - Main Paddy Field")
+        st.markdown('<span class="badge-danger">🔴 LIVE</span>', unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        # Display image nicely using streamlit
+        st.image("https://images.unsplash.com/photo-1590682680695-43b964a3ae17?q=80&w=1000&auto=format&fit=crop", use_container_width=True)
+        
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Temperature", "28°C", "+1°C")
+        col2.metric("Humidity", "65%", "-2%")
+        col3.metric("Soil Moisture", "45%", "Optimal")
+        
+        if st.button("Capture High-Res Snapshot", use_container_width=True):
+            st.success("Snapshot saved to gallery!")
 
 def alerts_page():
-    st.title("🔔 Alerts")
+    st.markdown('<div class="gradient-header"><h2>🔔 All Alerts</h2></div>', unsafe_allow_html=True)
     df = pd.DataFrame(st.session_state.alerts)
-    st.table(df)
+    st.dataframe(df, use_container_width=True, hide_index=True)
 
 def suggestions_page():
-    st.title("💡 AI Suggestions")
-    st.info("Based on recent activity, we recommend applying organic pesticide for Stem Borer.")
-    st.warning("Increase water level by 2 inches for optimal growth this week.")
+    st.markdown('<div class="gradient-header"><h2>💡 AI Suggestions</h2></div>', unsafe_allow_html=True)
+    
+    with st.container(border=True):
+        st.subheader("🐛 Pest Control")
+        st.warning("Based on recent activity, apply organic pesticide for Stem Borer immediately.")
+    
+    with st.container(border=True):
+        st.subheader("💧 Irrigation")
+        st.info("Increase water level by 2 inches for optimal growth this week.")
 
 def manual_page():
-    st.title("📖 Farming Manual")
-    st.write("Welcome to the comprehensive guide for paddy farming.")
-    with st.expander("Pest Control Guide"):
-        st.write("Detailed instructions on handling common pests like Stem Borer and Leaf Folder.")
-    with st.expander("Water Management"):
-        st.write("Best practices for maintaining water levels during different growth stages.")
+    st.markdown('<div class="gradient-header"><h2>📖 Farming Manual</h2></div>', unsafe_allow_html=True)
+    with st.expander("🐛 Pest Control Guide", expanded=True):
+        st.write("Detailed instructions on handling common pests like Stem Borer and Leaf Folder. Use neem-based organic sprays as first line of defense.")
+    with st.expander("💧 Water Management"):
+        st.write("Maintain 2-3 inches of standing water during the vegetative stage to prevent weed growth.")
 
 def helpline_page():
-    st.title("📞 Farmer Helpline")
+    st.markdown('<div class="gradient-header"><h2>📞 Farmer Helpline</h2></div>', unsafe_allow_html=True)
     farmers = [
-        {"Name": "Ravi Kumar", "Crop Type": "Basmati", "Phone": "+91 9876543210"},
-        {"Name": "Suresh Singh", "Crop Type": "Sona Masuri", "Phone": "+91 8765432109"}
+        {"Name": "Ravi Kumar", "Crop": "Basmati", "Phone": "+91 9876543210", "Status": "Available"},
+        {"Name": "Suresh Singh", "Crop": "Sona Masuri", "Phone": "+91 8765432109", "Status": "Busy"}
     ]
-    st.table(pd.DataFrame(farmers))
-    st.button("Call Support Expert")
+    st.dataframe(pd.DataFrame(farmers), use_container_width=True, hide_index=True)
+    st.button("Contact Support Team", use_container_width=True)
 
-def history_page():
-    st.title("📜 Alert History")
-    st.dataframe(pd.DataFrame(st.session_state.alerts), use_container_width=True)
-
-def settings_page():
-    st.title("⚙️ Settings")
-    st.text_input("Farm Name", value="My Main Farm")
-    st.selectbox("Notification Frequency", ["Immediate", "Hourly", "Daily summary"])
-    st.checkbox("Enable SMS Alerts", value=True)
-    st.button("Save Settings")
-
-# Router
+# Route to the selected page
 if page == "Home":
     home_page()
 elif page == "Monitoring":
@@ -144,6 +145,7 @@ elif page == "Manual":
     manual_page()
 elif page == "Helpline":
     helpline_page()
+<<<<<<< HEAD
 elif page == "History":
     history_page()
 elif page == "Settings":
@@ -173,3 +175,6 @@ if page == "Home":
    
     # Your table data code goes here
     # st.table(df) or st.dataframe(df)
+=======
+
+>>>>>>> 2fe242d (Initial commit)
